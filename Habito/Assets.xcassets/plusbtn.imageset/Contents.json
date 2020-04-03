@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Icon-120.png",
+      "filename" : "plusbtn.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "plusbtn-2.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "plusbtn-3.png",
       "scale" : "3x"
     }
   ],

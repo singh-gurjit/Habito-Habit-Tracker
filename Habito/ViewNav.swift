@@ -10,6 +10,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-class NavController: ObservedObject {
+class ViewNav: ObservableObject {
     @Published var currentVisibleView = "home"
 }

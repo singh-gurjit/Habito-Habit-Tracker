@@ -85,34 +85,52 @@ struct DashboardView: View {
         NavigationView {
             ZStack
                 {
+                    //set background image
                     Image("back")
                         .resizable()
                         .scaledToFill()
                         .edgesIgnoringSafeArea(.all)
                     
                     VStack {
-                        
+                        //list of dates of month
                         List {
+                            //horizontal scroll view for dates
                             ScrollView(.horizontal,showsIndicators: false, content: {
                                 HStack(spacing: 10) {
                                     
                                     ForEach(startDateOfMonth..<endDateOfMonth, id: \.self) { index in
-                                        VStack {
-                                            Text("\(index + 1)").foregroundColor(Color.white).padding(8).font(.headline)
-                                            Text("\(self.getWeekDay(day: index))").foregroundColor(Color.white).padding(8).font(.headline)
+                                        Button(action: {
+                                            
+                                        }) {
+                                            if Int(self.getCurrentDate()) == (index + 1) {
+                                                VStack {
+                                                    //display days and day of week
+                                                    Text("\(index + 1)").foregroundColor(Color.white).padding(8).font(.headline)
+                                                    Text("\(self.getWeekDay(day: index))").foregroundColor(Color.white).padding(8).font(.headline)
+                                                }.background(Color.purple)
+                                            } else {
+                                            VStack {
+                                                //display days and day of week
+                                                Text("\(index + 1)").foregroundColor(Color.white).padding(8).font(.headline)
+                                                Text("\(self.getWeekDay(day: index))").foregroundColor(Color.white).padding(8).font(.headline)
+                                            }
+                                            }
                                         }.background(Image("date_back").resizable())
-                                            .cornerRadius(8)
+                                        .cornerRadius(8)
+                                        
                                     }
                                     
                                 }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 20))
                             })
                         }.frame(height: 100)
                         
+                        //list to display habits
                         List {
                             
                             ForEach(habitDb, id: \.self) { item in
                                 
                                 HStack() {
+                                    //display progress
                                     Text("10 %").rotationEffect(Angle(degrees: -90)).foregroundColor(Color.white)
                                     Text("\(item.name!)").font(.title).foregroundColor(Color.white)
                                     Spacer()
@@ -140,43 +158,62 @@ struct DashboardView: View {
                         
                     }
                     .navigationBarItems(trailing: EditButton()).font(Font.headline.weight(.semibold))
+                    .foregroundColor(Color(red: 244 / 255, green: 118 / 255, blue: 94 / 255))
             }
         }
     }
     
+    //get start date of month
     private var startDateOfMonth: Int {
+        //get components of current date
         let getData = Calendar.current.dateComponents([.year, .month], from: currentDate)
         let startDate = Calendar.current.date(from: getData)!
+        //format date to string
         let formattedDate = formatter(date: startDate)
+        //change string to int and return it
         let changeToInt = Int(formattedDate) ?? 0
         return changeToInt
     }
     
+    //get end date of month
     private var endDateOfMonth: Int {
+        //get components of current date
         var getData = Calendar.current.dateComponents([.year, .month], from: currentDate)
         getData.month = (getData.month ?? 0) + 1
         getData.hour = (getData.hour ?? 0) - 1
+        //get end date of month
         let endDate = Calendar.current.date(from: getData)!
+        //format date to string
         let formattedDate = formatter(date: endDate)
+        //change string to int and return it
         let changeToInt = Int(formattedDate) ?? 0
         return changeToInt
     }
     
+    //function to format date and return string
     private func formatter(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "d MMM y"
         let resultString = dateFormatter.string(from: date)
+        //get string prefix means get date and return
         return String(resultString.prefix(2))
     }
     
+    //function to get week of day
     private func getWeekDay(day: Int) -> String {
+        //create string variable to store week day
         var stringWeekDay = ""
+        //get componets of current date
         let getComponents = Calendar.current.dateComponents([.year, .month], from: currentDate)
         let month = getComponents.month ?? 0
         let year = getComponents.year ?? 0
+        //add one to index value
         let getDate = day + 1
+        //concatenate components of date
         let conDateComponents = "\(getDate) " + "\(month) " + "\(year)"
+        //get week day
         let weekday = Calendar.current.component(.weekday, from: stringToDate(string: conDateComponents))
+        //switch case to assign weekday
         switch weekday {
         case 1:
             stringWeekDay = "S"
@@ -196,11 +233,12 @@ struct DashboardView: View {
             print("Unknown")
         }
         
-        //print("\(conDateComponents)")
+        //return weekday
         return stringWeekDay
         
     }
     
+    //function to convert string to date
     private func stringToDate(string: String) -> Date {
         let formatter = DateFormatter()
         formatter.dateFormat = "d M y"
@@ -208,6 +246,12 @@ struct DashboardView: View {
         return date
     }
     
+    private func getCurrentDate() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d"
+        let result = formatter.string(from: currentDate)
+        return String(result.prefix(2))
+    }
 }
 
 struct MetricsView: View {
@@ -265,10 +309,31 @@ struct NewHabbitView: View {
                         .resizable()
                         .scaledToFill()
                         .edgesIgnoringSafeArea(.all)
+                    
+                    VStack {
+                        
                     List {
                         Section {
-                            TextField("Name", text: $newHabbit)
-                            TextField("Description", text: $description)
+                            VStack(alignment: .leading) {
+                                Text("Name").font(Font.headline.weight(.semibold))
+                                    .foregroundColor(getAccentColor())
+                                TextField("Name", text: $newHabbit)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .foregroundColor(Color.gray)
+                                    .font(.headline)
+                            }
+                            
+                            Section {
+                                VStack(alignment: .leading) {
+                                    Text("Desciption").font(Font.headline.weight(.semibold))
+                                        .foregroundColor(getAccentColor())
+                                    TextField("Description", text: $description)
+                                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                                        .foregroundColor(Color.gray)
+                                        .font(.headline)
+                                }
+                            }
+                            
                         }
                         Section {
                             VStack {
@@ -286,7 +351,7 @@ struct NewHabbitView: View {
                                     
                                 }
                             }
-                        }
+                        
                         
                         Section {
                             HStack {
@@ -298,8 +363,9 @@ struct NewHabbitView: View {
                                 }
                             }
                         }
+                        }
                     }.listStyle(GroupedListStyle())
-                        .navigationBarTitle(("New Habbit"), displayMode: .inline)
+                        .navigationBarTitle(("New Habbit"))
                         .navigationBarItems(leading:
                             Button("Cancel") {
                                 self.showSheetNewHabbit.toggle()
@@ -324,10 +390,22 @@ struct NewHabbitView: View {
                                 Alert(title: Text("Alert"), message: Text("Please fill all fields to proceed."), dismissButton: .default(Text("OK")))
                             }
                             
-                    )
+                    ).foregroundColor(getAccentColor())
+                        .font(Font.headline.weight(.semibold))
+                        Spacer()
+                        Spacer()
+                    }
             }
         }
     }
+}
+
+func getAccentColor() -> Color {
+    return Color(red: 244 / 255, green: 118 / 255, blue: 94 / 255)
+}
+
+func getBackgroundColor() -> Color {
+    return Color(red: 226 / 255, green: 223 / 255, blue: 223 / 255)
 }
 
 struct RepeatModeSelectView: View {
@@ -357,10 +435,10 @@ struct RepeatModeSelectView: View {
                             } .onTapGesture {
                                 self.reminderMode = self.dayOfWeek[index]
                             }
-                        }
+                        }.accentColor( .black)
                     }
-                }
-        }
+                }.accentColor( .black)
+        }.navigationBarTitle("Repeat")
     }
 }
 

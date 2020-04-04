@@ -27,7 +27,7 @@ struct ContentView: View {
                 Spacer()
                 HStack {
                     //Dashboard
-                    Image(systemName: "house")
+                    Image("home_dark")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .padding(20)
@@ -40,7 +40,7 @@ struct ContentView: View {
                         Circle()
                             .foregroundColor(Color.white)
                             .frame(width: 70, height: 70)
-                        Image(systemName: "plus.circle.fill")
+                        Image("plusbtn")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 70, height: 70)
@@ -53,7 +53,7 @@ struct ContentView: View {
                         }
                     } .offset(y: -geometry.size.height/10/2)
                     //Metrics
-                    Image(systemName: "chart.bar")
+                    Image("metrics_dark")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .padding(20)
@@ -62,7 +62,7 @@ struct ContentView: View {
                             self.viewNavigation.currentVisibleView = "metrics"
                     }
                 }.frame(width: geometry.size.width, height: geometry.size.height/10)
-                    .background(Color.white.shadow(radius: 2))
+                    .background(Color.white.shadow(color: .orange,radius: 2))
             }.edgesIgnoringSafeArea(.bottom)
         }
         }
@@ -87,26 +87,31 @@ struct DashboardView: View {
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
+                
             VStack {
+                
                 HStack(spacing: 10) {
-                    ForEach(0...5, id: \.self) { index in
+                    Text("Dashboard").font(.title)
+                    Spacer()
+                    ForEach(0...4, id: \.self) { index in
                         VStack {
-                            Text("\(index + 1)").foregroundColor(Color.white).padding(4)
-                            Text("M").foregroundColor(Color.white).padding(4)
-                        }.background(Color.orange)
-                        .cornerRadius(5)
+                            Text("\(index + 1)").foregroundColor(Color.white).padding(8).font(.headline)
+                            Text("M").foregroundColor(Color.white).padding(8).font(.headline)
+                        }.background(Image("date_back").resizable())
+                        .cornerRadius(8)
                     }
-                }.frame(width: 400, alignment: .trailing)
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
+                    
+                }.padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                 
                 Spacer()
                 List {
                     ForEach(habitDb, id: \.self) { item in
                        
                         HStack() {
+                            Text("10 %").rotationEffect(Angle(degrees: -90)).foregroundColor(Color.white)
                             Text("\(item.name!)").font(.title).foregroundColor(Color.white)
                             Spacer()
-                            ForEach(0...5, id: \.self) { squareid in
+                            ForEach(0...4, id: \.self) { squareid in
                                 Button(action: {
                                     
                                 }) {
@@ -115,8 +120,8 @@ struct DashboardView: View {
                                     print("Clicked")
                                 }
                             }
-                        }.padding(10)
-                            .background(Color.orange)
+                        }.padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
+                            .background(Image("back_orange").resizable())
                     }
                     .onDelete { (indexSet) in
                         for offset in indexSet {
@@ -127,9 +132,9 @@ struct DashboardView: View {
                     }
                 
                 }
-                .navigationBarTitle("Dashboard")
-                .navigationBarItems(trailing: EditButton()).font(Font.headline.weight(.semibold))
+                
             }
+            .navigationBarItems(trailing: EditButton()).font(Font.headline.weight(.semibold))
             }
         }
     }
@@ -150,6 +155,8 @@ struct MetricsView: View {
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
+                VStack {
+                    Text("Metrics").font(.title)
             List {
                 ForEach(0...10, id: \.self) { index in
                     HStack(alignment: .center) {
@@ -162,7 +169,9 @@ struct MetricsView: View {
                         }
                     }
                 }
-            }        .navigationBarTitle("Metrics")
+            }
+                
+            }
         }
         }
     }

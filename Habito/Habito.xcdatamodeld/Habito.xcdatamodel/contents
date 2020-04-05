@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19D76" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="HabitCompleted" representedClassName="HabitCompleted" syncable="YES" codeGenerationType="class">
+        <attribute name="completedate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="habitid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+    </entity>
     <entity name="HabitDB" representedClassName="HabitDB" syncable="YES" codeGenerationType="class">
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="descrip" optional="YES" attributeType="String"/>
@@ -12,5 +18,6 @@
     </entity>
     <elements>
         <element name="HabitDB" positionX="-63" positionY="-18" width="128" height="163"/>
+        <element name="HabitCompleted" positionX="-63" positionY="45" width="128" height="103"/>
     </elements>
 </model>

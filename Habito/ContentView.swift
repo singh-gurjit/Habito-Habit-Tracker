@@ -71,7 +71,7 @@ struct ContentView: View {
 struct DashboardView: View {
     
     var currentDate = Date()
-    
+    @State var selectedDate: String = ""
     init() {
         UITableView.appearance().separatorColor = .clear
         UITableView.appearance().backgroundColor = .clear
@@ -79,7 +79,7 @@ struct DashboardView: View {
     }
     
     @Environment(\.managedObjectContext) var moc
-    @FetchRequest(entity: HabitDB.entity(), sortDescriptors: []) var habitDb: FetchedResults<HabitDB>
+    @FetchRequest(entity: HabitDB.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \HabitDB.date, ascending: false)]) var habitDb: FetchedResults<HabitDB>
     
     var body: some View {
         NavigationView {
@@ -93,14 +93,18 @@ struct DashboardView: View {
                     
                     VStack {
                         //list of dates of month
+                        Text("Date: \(selectedDate)").onAppear() {
+                            self.selectedDate = self.getDisplayDate
+                        }
                         List {
                             //horizontal scroll view for dates
                             ScrollView(.horizontal,showsIndicators: false, content: {
                                 HStack(spacing: 10) {
                                     
                                     ForEach(startDateOfMonth..<endDateOfMonth, id: \.self) { index in
+                                        
                                         Button(action: {
-                                            
+                                            self.selectedDate = "\(index + 1)-\(self.getCurrentMonthAndYear())"
                                         }) {
                                             if Int(self.getCurrentDate()) == (index + 1) {
                                                 VStack {
@@ -140,7 +144,7 @@ struct DashboardView: View {
                                     }) {
                                         Image(systemName: "square").font(.title).foregroundColor(Color.white)
                                     }.onTapGesture {
-                                        print("Clicked")
+                                        completedHabit(habitID: item.id!, completedDate: self.stringToDateCompleted(string: self.selectedDate))
                                     }
                                     
                                 }.padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
@@ -246,11 +250,30 @@ struct DashboardView: View {
         return date
     }
     
+    private func stringToDateCompleted(string: String) -> Date {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d-M-y"
+        let date = formatter.date(from: string)!
+        return date
+    }
+    
     private func getCurrentDate() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "d"
         let result = formatter.string(from: currentDate)
         return String(result.prefix(2))
+    }
+    
+    private var getDisplayDate: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d-M-y"
+        return formatter.string(from: currentDate)
+    }
+    
+    private func getCurrentMonthAndYear() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M-y"
+        return formatter.string(from: currentDate)
     }
 }
 
@@ -459,9 +482,8 @@ struct NewHabbitView: View {
                                         self.isEmptyFieldAlertShown.toggle()
                                         print("Empty Data")
                                     } else {
-                                        createNewHabit(name: self.newHabbit, desc: self.description, repeatMode: self.remMode)
+                                        createNewHabit(name: self.newHabbit, desc: self.description, repeatMode: self.remMode, aDate: self.remAlarm)
                                         self.isDataSave.toggle()
-                                        
                                     }
                                     if self.isDataSave == true {
                                         self.showSheetNewHabbit.toggle()
@@ -533,7 +555,7 @@ func getCurrentDate() -> String {
     return resultDate
 }
 
-func createNewHabit(name: String, desc: String, repeatMode: String) {
+func createNewHabit(name: String, desc: String, repeatMode: String, aDate: Date) {
     guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
     let moc = appDelegate.persistentContainer.viewContext
     let habitEntity = NSEntityDescription.entity(forEntityName: "HabitDB", in: moc)!
@@ -551,11 +573,37 @@ func createNewHabit(name: String, desc: String, repeatMode: String) {
     habit.setValue(desc, forKey: "descrip")
     habit.setValue(changedDate, forKey: "date")
     habit.setValue("", forKey: "time")
-    habit.setValue(changedDate, forKey: "reminder")
+    habit.setValue(aDate, forKey: "reminder")
     habit.setValue(repeatMode, forKey: "repeatMode")
     habit.setValue(0, forKey: "order")
     do {
         try moc.save()
+    } catch let error as NSError {
+        print("Error while saving.. \(error.userInfo)")
+    }
+    
+}
+
+func completedHabit(habitID: UUID, completedDate: Date) {
+    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+    let moc = appDelegate.persistentContainer.viewContext
+    let habitEntity = NSEntityDescription.entity(forEntityName: "HabitCompleted", in: moc)!
+    let habit = NSManagedObject(entity: habitEntity, insertInto: moc)
+    
+    let getDate = getCurrentDate()
+    let formatter = DateFormatter()
+    formatter.dateFormat = "d MMM y"
+    //change string to date
+    let changedDate = formatter.date(from: getDate)
+    
+    //insert data
+    habit.setValue(UUID(), forKey: "id")
+    habit.setValue(habitID, forKey: "habitid")
+    habit.setValue(completedDate, forKey: "completedate")
+    habit.setValue(changedDate, forKey: "date")
+    do {
+        try moc.save()
+        print("Habit completed")
     } catch let error as NSError {
         print("Error while saving.. \(error.userInfo)")
     }

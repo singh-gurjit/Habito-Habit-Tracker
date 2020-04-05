@@ -109,14 +109,14 @@ struct DashboardView: View {
                                                     Text("\(self.getWeekDay(day: index))").foregroundColor(Color.white).padding(8).font(.headline)
                                                 }.background(Color.purple)
                                             } else {
-                                            VStack {
-                                                //display days and day of week
-                                                Text("\(index + 1)").foregroundColor(Color.white).padding(8).font(.headline)
-                                                Text("\(self.getWeekDay(day: index))").foregroundColor(Color.white).padding(8).font(.headline)
-                                            }
+                                                VStack {
+                                                    //display days and day of week
+                                                    Text("\(index + 1)").foregroundColor(Color.white).padding(8).font(.headline)
+                                                    Text("\(self.getWeekDay(day: index))").foregroundColor(Color.white).padding(8).font(.headline)
+                                                }
                                             }
                                         }.background(Image("date_back").resizable())
-                                        .cornerRadius(8)
+                                            .cornerRadius(8)
                                         
                                     }
                                     
@@ -269,24 +269,107 @@ struct MetricsView: View {
                         .scaledToFill()
                         .edgesIgnoringSafeArea(.all)
                     VStack {
-                        Text("Metrics").font(.title)
+                        
                         List {
-                            ForEach(0...10, id: \.self) { index in
-                                HStack(alignment: .center) {
-                                    ForEach(0...1, id: \.self) { item in
-                                        HStack {
-                                            Spacer()
-                                            Image(systemName: "house").frame(width:100, height: 100)
-                                            Spacer()
+                            Section {
+                                ScrollView(.horizontal,showsIndicators: false, content: {
+                                    HStack(spacing: 10) {
+                                        ForEach(0..<10) { index in
+                                            Button(action: {
+                                                
+                                            }) {
+                                                Text("Section : \(index)").foregroundColor(Color.white)
+                                            }.frame(width: 150, height: 150)
+                                                .background(getAccentColor())
+                                                .cornerRadius(10)
                                         }
                                     }
+                                    .padding(.leading, 10)
+                                })
+                                    .frame(height: 150)
+                            }
+                            
+                            Section {
+                                HStack {
+                                    Text("Completion Rate")
+                                    Spacer()
+                                    Text("Last 30 days")
+                                }.padding()
+                            }
+                            
+                            Section {
+                                VStack {
+                                    
+                                    
+                                HStack(alignment: .bottom,spacing: 8) {
+                                    ForEach(percents) { index in
+                                        CustomBar(percentage: index.percentage, dayOfWeek: index.day)
+                                    }
+                                    }.padding(5)
+                                    .frame(height: 250)
+                                    }.border(getBackgroundColor())
+                                .padding(EdgeInsets(top: 20, leading: 0, bottom: 20, trailing: 0))
+                            }
+                            
+                            
+                            Section {
+                                HStack {
+                                    Text("Check-in Time")
+                                    Spacer()
+                                    Text("Last 30 days")
                                 }
                             }
+                            
+                            Section {
+                                VStack {
+                                    
+                                HStack(alignment: .bottom,spacing: 8) {
+                                    ForEach(percents) { index in
+                                        CustomBar(percentage: index.percentage, dayOfWeek: index.day)
+                                    }
+                                    }.padding(5)
+                                    .frame(height: 250)
+                                    }.border(getBackgroundColor())
+                                .padding(EdgeInsets(top: 20, leading: 0, bottom: 20, trailing: 0))
+                            }
                         }
-                        
+                     Spacer()
                     }
             }
         }
+    }
+}
+
+struct CustomBar: View {
+    
+    @State var percentage: CGFloat = 0
+    var dayOfWeek = ""
+    
+    var body: some View {
+        VStack {
+            Text(String(format: "%.0f", Double(percentage)) + " %").foregroundColor(Color.black).opacity(0.5)
+            Rectangle().fill(getAccentColor()).frame(width: UIScreen.main.bounds.width / 7 - 12, height: getBarHight())
+            Text("\(dayOfWeek)").foregroundColor(Color.black).opacity(0.5)
+        }
+    }
+    
+    private func getBarHight() -> CGFloat {
+        return 200 / 100 * percentage
+    }
+}
+
+struct CustomBarChart: View {
+    @State var percentage: CGFloat = 0
+    var color: Color = .white
+    var body: some View {
+        HStack {
+            Text(String(format: "%.0f", Double(percentage)) + " %").foregroundColor(Color.black).opacity(0.5)
+            Capsule().fill(color).frame(width: percentage, height: 15)
+        }.padding()
+    }
+    
+    private func getBarHeight() -> CGFloat {
+        return 200 / 100 * percentage
     }
 }
 
@@ -312,86 +395,86 @@ struct NewHabbitView: View {
                     
                     VStack {
                         
-                    List {
-                        Section {
-                            VStack(alignment: .leading) {
-                                Text("Name").font(Font.headline.weight(.semibold))
-                                    .foregroundColor(getAccentColor())
-                                TextField("Name", text: $newHabbit)
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                    .foregroundColor(Color.gray)
-                                    .font(.headline)
-                            }
-                            
+                        List {
                             Section {
                                 VStack(alignment: .leading) {
-                                    Text("Desciption").font(Font.headline.weight(.semibold))
+                                    Text("Name").font(Font.headline.weight(.semibold))
                                         .foregroundColor(getAccentColor())
-                                    TextField("Description", text: $description)
+                                    TextField("Name", text: $newHabbit)
                                         .textFieldStyle(RoundedBorderTextFieldStyle())
                                         .foregroundColor(Color.gray)
                                         .font(.headline)
                                 }
+                                
+                                Section {
+                                    VStack(alignment: .leading) {
+                                        Text("Desciption").font(Font.headline.weight(.semibold))
+                                            .foregroundColor(getAccentColor())
+                                        TextField("Description", text: $description)
+                                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                                            .foregroundColor(Color.gray)
+                                            .font(.headline)
+                                    }
+                                }
+                                
                             }
-                            
-                        }
-                        Section {
-                            VStack {
-                                HStack {
-                                    Toggle(isOn: $showReminderDetail) {
-                                        Text("Reminder")
+                            Section {
+                                VStack {
+                                    HStack {
+                                        Toggle(isOn: $showReminderDetail) {
+                                            Text("Reminder")
+                                            
+                                        }
                                         
                                     }
-                                    
+                                    if showReminderDetail {
+                                        Divider()
+                                        //Text("\(reminderDate, formatter: dateFormatter)")
+                                        DatePicker("Alarm", selection: $remAlarm)
+                                        
+                                    }
                                 }
-                                if showReminderDetail {
-                                    Divider()
-                                    //Text("\(reminderDate, formatter: dateFormatter)")
-                                    DatePicker("Alarm", selection: $remAlarm)
-                                    
-                                }
-                            }
-                        
-                        
-                        Section {
-                            HStack {
-                                Text("Repeat")
                                 
-                                NavigationLink(destination: RepeatModeSelectView(reminderMode: $remMode)) {
-                                    Spacer()
-                                    Text(self.remMode).foregroundColor(Color.gray)
+                                
+                                Section {
+                                    HStack {
+                                        Text("Repeat")
+                                        
+                                        NavigationLink(destination: RepeatModeSelectView(reminderMode: $remMode)) {
+                                            Spacer()
+                                            Text(self.remMode).foregroundColor(Color.gray)
+                                        }
+                                    }
                                 }
                             }
-                        }
-                        }
-                    }.listStyle(GroupedListStyle())
-                        .navigationBarTitle(("New Habbit"))
-                        .navigationBarItems(leading:
-                            Button("Cancel") {
-                                self.showSheetNewHabbit.toggle()
-                            }
-                            ,trailing:
-                            Button(action: {
-                                if (self.newHabbit.isEmpty) {
-                                    self.isEmptyFieldAlertShown.toggle()
-                                    print("Empty Data")
-                                } else {
-                                    createNewHabit(name: self.newHabbit, desc: self.description, repeatMode: self.remMode)
-                                    self.isDataSave.toggle()
-                                    
-                                }
-                                if self.isDataSave == true {
+                        }.listStyle(GroupedListStyle())
+                            .navigationBarTitle(("New Habbit"))
+                            .navigationBarItems(leading:
+                                Button("Cancel") {
                                     self.showSheetNewHabbit.toggle()
                                 }
-                            }) {
-                                Text("Done")
-                            }
-                            .alert(isPresented: $isEmptyFieldAlertShown) {
-                                Alert(title: Text("Alert"), message: Text("Please fill all fields to proceed."), dismissButton: .default(Text("OK")))
-                            }
-                            
-                    ).foregroundColor(getAccentColor())
-                        .font(Font.headline.weight(.semibold))
+                                ,trailing:
+                                Button(action: {
+                                    if (self.newHabbit.isEmpty) {
+                                        self.isEmptyFieldAlertShown.toggle()
+                                        print("Empty Data")
+                                    } else {
+                                        createNewHabit(name: self.newHabbit, desc: self.description, repeatMode: self.remMode)
+                                        self.isDataSave.toggle()
+                                        
+                                    }
+                                    if self.isDataSave == true {
+                                        self.showSheetNewHabbit.toggle()
+                                    }
+                                }) {
+                                    Text("Done")
+                                }
+                                .alert(isPresented: $isEmptyFieldAlertShown) {
+                                    Alert(title: Text("Alert"), message: Text("Please fill all fields to proceed."), dismissButton: .default(Text("OK")))
+                                }
+                                
+                        ).foregroundColor(getAccentColor())
+                            .font(Font.headline.weight(.semibold))
                         Spacer()
                         Spacer()
                     }
@@ -435,9 +518,9 @@ struct RepeatModeSelectView: View {
                             } .onTapGesture {
                                 self.reminderMode = self.dayOfWeek[index]
                             }
-                        }.accentColor( .black)
+                        }
                     }
-                }.accentColor( .black)
+                }
         }.navigationBarTitle("Repeat")
     }
 }
@@ -484,3 +567,19 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+struct type: Identifiable {
+    var id: Int
+    var percentage: CGFloat
+    var day: String
+}
+
+var percents = [
+    type(id: 0, percentage: 35, day: "Mon"),
+    type(id: 1, percentage: 12, day: "Tue"),
+    type(id: 2, percentage: 55, day: "Wed"),
+    type(id: 3, percentage: 33, day: "Thu"),
+    type(id: 4, percentage: 90, day: "Fri"),
+    type(id: 5, percentage: 67, day: "Sat"),
+    type(id: 6, percentage: 50, day: "Mon")
+]

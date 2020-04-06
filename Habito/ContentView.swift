@@ -72,6 +72,8 @@ struct DashboardView: View {
     
     var currentDate = Date()
     @State var selectedDate: String = ""
+    @State var completedHabitFound = false
+    
     init() {
         UITableView.appearance().separatorColor = .clear
         UITableView.appearance().backgroundColor = .clear
@@ -80,6 +82,9 @@ struct DashboardView: View {
     
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(entity: HabitDB.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \HabitDB.date, ascending: false)]) var habitDb: FetchedResults<HabitDB>
+    
+    @Environment(\.managedObjectContext) var mocHabitCompleted
+    @FetchRequest(entity: HabitCompleted.entity(), sortDescriptors: []) var habitCompleted: FetchedResults<HabitCompleted>
     
     var body: some View {
         NavigationView {
@@ -91,11 +96,11 @@ struct DashboardView: View {
                         .scaledToFill()
                         .edgesIgnoringSafeArea(.all)
                     
-                    VStack {
+                    VStack(alignment: .leading) {
                         //list of dates of month
-                        Text("Date: \(selectedDate)").onAppear() {
-                            self.selectedDate = self.getDisplayDate
-                        }
+                            Text("Date: \(selectedDate)").onAppear() {
+                                self.selectedDate = self.getDisplayDate
+                            }.padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0))
                         List {
                             //horizontal scroll view for dates
                             ScrollView(.horizontal,showsIndicators: false, content: {
@@ -138,13 +143,31 @@ struct DashboardView: View {
                                     Text("10 %").rotationEffect(Angle(degrees: -90)).foregroundColor(Color.white)
                                     Text("\(item.name!)").font(.title).foregroundColor(Color.white)
                                     Spacer()
-                                    
-                                    Button(action: {
-                                        
-                                    }) {
-                                        Image(systemName: "square").font(.title).foregroundColor(Color.white)
-                                    }.onTapGesture {
-                                        completedHabit(habitID: item.id!, completedDate: self.stringToDateCompleted(string: self.selectedDate))
+                                    //fetch completed habit record
+                                    ForEach(self.habitCompleted, id: \.self) { data in
+                                        Text("\(self.habitCompleted.endIndex)").onAppear() {
+                                            if data.habitid! == item.id && data.completedate! == self.stringToDateCompleted(string: self.selectedDate){
+                                                self.completedHabitFound.toggle()
+                                            }
+                                        }.hidden()
+                                    }
+                                    //check if habit is completed or not
+                                    if self.completedHabitFound {
+                                        Button(action: {
+                                            
+                                        }) {
+                                            Image(systemName: "square.fill").font(.title).foregroundColor(Color.white)
+                                        }.onTapGesture {
+                                
+                                        }
+                                    } else {
+                                        Button(action: {
+                                            
+                                        }) {
+                                            Image(systemName: "square").font(.title).foregroundColor(Color.white)
+                                        }.onTapGesture {
+                                            completedHabit(habitID: item.id!, completedDate: self.stringToDateCompleted(string: self.selectedDate))
+                                        }
                                     }
                                     
                                 }.padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
@@ -248,6 +271,16 @@ struct DashboardView: View {
         formatter.dateFormat = "d M y"
         let date = formatter.date(from: string)!
         return date
+    }
+    
+    //change date to string
+    func changeDateToString(adate: Date) -> String {
+        let adate =  adate
+        //let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMM y"
+        let result = formatter.string(from: adate)
+        return result
     }
     
     private func stringToDateCompleted(string: String) -> Date {

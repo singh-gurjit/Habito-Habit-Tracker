@@ -110,6 +110,7 @@ struct DashboardView: View {
                                         
                                         Button(action: {
                                             self.selectedDate = "\(index + 1)-\(self.getCurrentMonthAndYear())"
+                                            
                                         }) {
                                             if Int(self.getCurrentDate()) == (index + 1) {
                                                 VStack {
@@ -154,21 +155,22 @@ struct DashboardView: View {
                                     //check if habit is completed or not
                                     if self.completedHabitFound {
                                         Button(action: {
-                                            
+
                                         }) {
                                             Image(systemName: "square.fill").font(.title).foregroundColor(Color.white)
                                         }.onTapGesture {
-                                
+
                                         }
                                     } else {
                                         Button(action: {
-                                            
+
                                         }) {
                                             Image(systemName: "square").font(.title).foregroundColor(Color.white)
                                         }.onTapGesture {
                                             completedHabit(habitID: item.id!, completedDate: self.stringToDateCompleted(string: self.selectedDate))
                                         }
                                     }
+                                    
                                     
                                 }.padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
                                     .background(Image("back_orange").resizable())
@@ -636,6 +638,29 @@ func completedHabit(habitID: UUID, completedDate: Date) {
     habit.setValue(changedDate, forKey: "date")
     do {
         try moc.save()
+        print("Habit completed")
+    } catch let error as NSError {
+        print("Error while saving.. \(error.userInfo)")
+    }
+    
+}
+
+func deleteHabit(id: UUID) {
+    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+    let moc = appDelegate.persistentContainer.viewContext
+    let habitEntity = NSFetchRequest<NSFetchRequestResult>(entityName: "HabitCompleted")
+    habitEntity.predicate = NSPredicate(format: "id = %@", "\(id)")
+    
+    do {
+        let delete = try moc.fetch(habitEntity)
+        let itemTodelete = delete[0] as! NSManagedObject
+        moc.delete(itemTodelete)
+        do {
+            try moc.save()
+        } catch {
+            print("Error")
+        }
+        
         print("Habit completed")
     } catch let error as NSError {
         print("Error while saving.. \(error.userInfo)")

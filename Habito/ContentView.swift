@@ -8,6 +8,7 @@
 
 import SwiftUI
 import CoreData
+import UIKit
 
 struct ContentView: View {
     
@@ -72,7 +73,7 @@ struct DashboardView: View {
     
     var currentDate = Date()
     @State var selectedDate: String = ""
-    @State var completedHabitFound = false
+    @State var uuid = "4D7BC347-E708-453E-9C58-EBDF48FDB263"
     
     init() {
         UITableView.appearance().separatorColor = .clear
@@ -81,10 +82,7 @@ struct DashboardView: View {
     }
     
     @Environment(\.managedObjectContext) var moc
-    @FetchRequest(entity: HabitDB.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \HabitDB.date, ascending: false)]) var habitDb: FetchedResults<HabitDB>
-    
-    @Environment(\.managedObjectContext) var mocHabitCompleted
-    @FetchRequest(entity: HabitCompleted.entity(), sortDescriptors: []) var habitCompleted: FetchedResults<HabitCompleted>
+    @FetchRequest(entity: HabitDB.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \HabitDB.time, ascending: false)]) var habitDb: FetchedResults<HabitDB>
     
     var body: some View {
         NavigationView {
@@ -98,7 +96,7 @@ struct DashboardView: View {
                     
                     VStack(alignment: .leading) {
                         //list of dates of month
-                            Text("Date: \(selectedDate)").onAppear() {
+                            Text("Date: \(getDisplayDate)").onAppear() {
                                 self.selectedDate = self.getDisplayDate
                             }.padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0))
                         List {
@@ -144,33 +142,9 @@ struct DashboardView: View {
                                     Text("10 %").rotationEffect(Angle(degrees: -90)).foregroundColor(Color.white)
                                     Text("\(item.name!)").font(.title).foregroundColor(Color.white)
                                     Spacer()
-                                    //fetch completed habit record
-                                    ForEach(self.habitCompleted, id: \.self) { data in
-                                        Text("\(self.habitCompleted.endIndex)").onAppear() {
-                                            if data.habitid! == item.id && data.completedate! == self.stringToDateCompleted(string: self.selectedDate){
-                                                self.completedHabitFound.toggle()
-                                            }
-                                        }.hidden()
-                                    }
-                                    //check if habit is completed or not
-                                    if self.completedHabitFound {
-                                        Button(action: {
-
-                                        }) {
-                                            Image(systemName: "square.fill").font(.title).foregroundColor(Color.white)
-                                        }.onTapGesture {
-
-                                        }
-                                    } else {
-                                        Button(action: {
-
-                                        }) {
-                                            Image(systemName: "square").font(.title).foregroundColor(Color.white)
-                                        }.onTapGesture {
-                                            completedHabit(habitID: item.id!, completedDate: self.stringToDateCompleted(string: self.selectedDate))
-                                        }
-                                    }
+                                    //custom check box view
                                     
+                                    CheckBoxCustomView(habitId: item.id!, selectDate: self.getDisplayDate, completedHabitId: self.stringToUUID(input: self.uuid))
                                     
                                 }.padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
                                     .background(Image("back_orange").resizable())
@@ -190,7 +164,14 @@ struct DashboardView: View {
                     .foregroundColor(Color(red: 244 / 255, green: 118 / 255, blue: 94 / 255))
             }
         }
+        
     }
+    
+    //change string to UUID
+           func stringToUUID(input: String) -> UUID {
+               let getInput = UUID(uuidString: input)!
+               return getInput
+           }
     
     //get start date of month
     private var startDateOfMonth: Int {
@@ -309,6 +290,54 @@ struct DashboardView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "M-y"
         return formatter.string(from: currentDate)
+    }
+}
+
+struct CheckBoxCustomView: View {
+    
+    @State var habitId: UUID
+    @State var selectDate: String
+    @State var completedHabitFound = false
+    @State var showCheckbox = false
+    @State var completedHabitId: UUID
+    
+    @Environment(\.managedObjectContext) var mocHabitCompleted
+    @FetchRequest(entity: HabitCompleted.entity(), sortDescriptors: []) var habitCompleted: FetchedResults<HabitCompleted>
+    
+    var body: some View {
+        HStack {
+            ForEach(self.habitCompleted, id: \.self) { data in
+                Text("").onAppear() {
+                    if data.habitid! == self.habitId && (data.completedate! == self.stringToDateCompleted(string: self.selectDate)) {
+                            //self.stringToDateCompleted(string: self.selectedDate)
+                            self.completedHabitFound.toggle()
+                        self.completedHabitId = data.id!
+                    }
+                    
+                }.hidden()
+            }
+            if completedHabitFound {
+                Button(action: {
+                    deleteHabit(id: self.completedHabitId)
+                    self.completedHabitFound.toggle()
+                }) {
+                    Image(systemName: "checkmark.square").foregroundColor(Color.white).font(.title)
+                }
+            } else {
+                Button(action: {
+                    completedHabit(habitID: self.habitId, completedDate: self.stringToDateCompleted(string: self.selectDate))
+                }) {
+                    Image(systemName: "square").foregroundColor(Color.white).font(.title)
+                }
+            }
+        }
+    }
+    
+    private func stringToDateCompleted(string: String) -> Date {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d-M-y"
+        let date = formatter.date(from: string)!
+        return date
     }
 }
 
@@ -550,7 +579,9 @@ func getBackgroundColor() -> Color {
 
 struct RepeatModeSelectView: View {
     @Binding var reminderMode: String
+    
     let dayOfWeek = ["None","Everyday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+    
     var body: some View {
         ZStack
             {
@@ -577,8 +608,25 @@ struct RepeatModeSelectView: View {
                             }
                         }
                     }
-                }
+                }.accentColor(getAccentColor())
         }.navigationBarTitle("Repeat")
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: NavigationRepeatModeItem())
+        
+    }
+}
+
+struct NavigationRepeatModeItem: View {
+    @Environment(\.presentationMode) var presentationMode
+    var body: some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        }){
+            HStack {
+                Image(systemName: "chevron.left").imageScale(.medium).font(Font.headline.weight(.semibold)).foregroundColor(Color.red)
+                Text("").font(.headline).fontWeight(.semibold).foregroundColor(Color.red)
+            }
+        }
     }
 }
 
@@ -596,6 +644,7 @@ func createNewHabit(name: String, desc: String, repeatMode: String, aDate: Date)
     let habitEntity = NSEntityDescription.entity(forEntityName: "HabitDB", in: moc)!
     let habit = NSManagedObject(entity: habitEntity, insertInto: moc)
     
+    let date = Date()
     let getDate = getCurrentDate()
     let formatter = DateFormatter()
     formatter.dateFormat = "d MMM y"
@@ -607,7 +656,7 @@ func createNewHabit(name: String, desc: String, repeatMode: String, aDate: Date)
     habit.setValue(name, forKey: "name")
     habit.setValue(desc, forKey: "descrip")
     habit.setValue(changedDate, forKey: "date")
-    habit.setValue("", forKey: "time")
+    habit.setValue(date, forKey: "time")
     habit.setValue(aDate, forKey: "reminder")
     habit.setValue(repeatMode, forKey: "repeatMode")
     habit.setValue(0, forKey: "order")
@@ -661,7 +710,7 @@ func deleteHabit(id: UUID) {
             print("Error")
         }
         
-        print("Habit completed")
+        print("Habit deleted")
     } catch let error as NSError {
         print("Error while saving.. \(error.userInfo)")
     }

@@ -14,10 +14,10 @@
         <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="reminder" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="repeatMode" optional="YES" attributeType="String"/>
-        <attribute name="time" optional="YES" attributeType="String"/>
+        <attribute name="time" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <elements>
-        <element name="HabitDB" positionX="-63" positionY="-18" width="128" height="163"/>
         <element name="HabitCompleted" positionX="-63" positionY="45" width="128" height="103"/>
+        <element name="HabitDB" positionX="-63" positionY="-18" width="128" height="163"/>
     </elements>
 </model>

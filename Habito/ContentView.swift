@@ -344,9 +344,11 @@ struct CheckBoxCustomView: View {
 
 struct MetricsView: View {
     
-    init() {
-        UITableView.appearance().separatorColor = .clear
-    }
+    let currentDate = Date()
+    
+    @Environment(\.managedObjectContext) var moc
+       @FetchRequest(entity: HabitDB.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \HabitDB.time, ascending: false)]) var habitDb: FetchedResults<HabitDB>
+    
     
     var body: some View {
         NavigationView {
@@ -357,74 +359,88 @@ struct MetricsView: View {
                         .scaledToFill()
                         .edgesIgnoringSafeArea(.all)
                     VStack {
-                        
+                            Spacer()
+                            ZStack {
+                                
+                                MetricsProgressBar(height: 300, to: 0.8, color: .red)
+                                MetricsProgressBar(height: 230, to: 0.45, color: .yellow)
+                            
+                                ForEach(habitDb, id: \.self) { item in
+                                    MetricsProgressBar(height: 100, to: CGFloat(getDataFromDB(id: item.id!, date: self.getDisplayDate) / 10), color: .green)
+                                }
+                        }.padding()
+                            Spacer()
                         List {
-                            Section {
-                                ScrollView(.horizontal,showsIndicators: false, content: {
-                                    HStack(spacing: 10) {
-                                        ForEach(0..<10) { index in
-                                            Button(action: {
-                                                
-                                            }) {
-                                                Text("Section : \(index)").foregroundColor(Color.white)
-                                            }.frame(width: 150, height: 150)
-                                                .background(getAccentColor())
-                                                .cornerRadius(10)
-                                        }
+                            Section(header: Text("All Habits (This Month)")){
+                                ForEach(habitDb, id: \.self) { item in
+                                    HStack {
+                                        Text("\(item.name!)").font(Font.headline.weight(.bold)).foregroundColor(getAccentColor())
+                                        Spacer()
+                                        Text("\(getDataFromDB(id: item.id!, date: self.getDisplayDate)) %")
                                     }
-                                    .padding(.leading, 10)
-                                })
-                                    .frame(height: 150)
-                            }
-                            
-                            Section {
-                                HStack {
-                                    Text("Completion Rate")
-                                    Spacer()
-                                    Text("Last 30 days")
-                                }.padding()
-                            }
-                            
-                            Section {
-                                VStack {
-                                    
-                                    
-                                HStack(alignment: .bottom,spacing: 8) {
-                                    ForEach(percents) { index in
-                                        CustomBar(percentage: index.percentage, dayOfWeek: index.day)
-                                    }
-                                    }.padding(5)
-                                    .frame(height: 250)
-                                    }.border(getBackgroundColor())
-                                .padding(EdgeInsets(top: 20, leading: 0, bottom: 20, trailing: 0))
-                            }
-                            
-                            
-                            Section {
-                                HStack {
-                                    Text("Check-in Time")
-                                    Spacer()
-                                    Text("Last 30 days")
                                 }
                             }
-                            
-                            Section {
-                                VStack {
-                                    
-                                HStack(alignment: .bottom,spacing: 8) {
-                                    ForEach(percents) { index in
-                                        CustomBar(percentage: index.percentage, dayOfWeek: index.day)
-                                    }
-                                    }.padding(5)
-                                    .frame(height: 250)
-                                    }.border(getBackgroundColor())
-                                .padding(EdgeInsets(top: 20, leading: 0, bottom: 20, trailing: 0))
-                            }
-                        }
-                     Spacer()
+                        }.padding()
                     }
             }
         }
+    }
+    
+    private var getDisplayDate: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d-M-y"
+        return formatter.string(from: currentDate)
+    }
+    
+    private var getRandomNumber: CGFloat {
+        let randomInt = Int.random(in: 10...300)
+        return CGFloat(randomInt)
+    }
+}
+
+//custom calender
+struct GridStack<Content: View>: View {
+    let rows: Int
+    let columns: Int
+    let content: (Int, Int) -> Content
+
+    var body: some View {
+        VStack {
+            ForEach(0 ..< rows, id: \.self) { row in
+                HStack {
+                    ForEach(0 ..< self.columns, id: \.self) { column in
+                        self.content(row, column)
+                    }
+                }
+            }
+        }
+    }
+
+    init(rows: Int, columns: Int, @ViewBuilder content: @escaping (Int, Int) -> Content) {
+        self.rows = rows
+        self.columns = columns
+        self.content = content
+    }
+}
+
+struct MetricsProgressBar: View {
+    
+    var height: CGFloat
+    var to: CGFloat
+    var color: Color
+    
+    var body: some View {
+        ZStack {
+            Circle()
+            .trim(from: 0, to: 1)
+                .stroke(Color.black.opacity(0.25), style: StrokeStyle(lineWidth: 25, lineCap: .round))
+                .frame(height: height)
+            Circle()
+            .trim(from: 0, to: to)
+                .stroke(color, style: StrokeStyle(lineWidth: 25, lineCap: .round))
+                .frame(height: height)
+        }.rotationEffect(.init(degrees: 270))
+        
     }
 }
 

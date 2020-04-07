@@ -9,6 +9,7 @@
 import SwiftUI
 import CoreData
 import UIKit
+import Foundation
 
 struct ContentView: View {
     
@@ -139,7 +140,7 @@ struct DashboardView: View {
                                 
                                 HStack() {
                                     //display progress
-                                    Text("10 %").rotationEffect(Angle(degrees: -90)).foregroundColor(Color.white)
+                                    Text("\(getDataFromDB(id: item.id!, date: self.getDisplayDate)) %").rotationEffect(Angle(degrees: -90)).foregroundColor(Color.white).padding(EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 0))
                                     Text("\(item.name!)").font(.title).foregroundColor(Color.white)
                                     Spacer()
                                     //custom check box view
@@ -715,6 +716,56 @@ func deleteHabit(id: UUID) {
         print("Error while saving.. \(error.userInfo)")
     }
     
+}
+
+func getDataFromDB(id: UUID, date: String) -> Int {
+    
+    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+        return 0
+    }
+    let moc = appDelegate.persistentContainer.viewContext
+    
+    let habitEntity = NSFetchRequest<NSFetchRequestResult>(entityName: "HabitCompleted")
+    habitEntity.predicate = NSPredicate(format: "habitid = %@", "\(id)")
+    
+    //current month and year
+    let currentDate = Date()
+    let formatter = DateFormatter()
+    formatter.dateFormat = "M-y"
+    let resultDate = formatter.string(from: currentDate)
+    
+    var count = 0
+    var done = false
+    do {
+        let result = try moc.fetch(habitEntity)
+        for data in result as! [NSManagedObject] {
+            let date = data.value(forKey: "date") as! Date
+            
+            let changeDate = date
+            let formatter1 = DateFormatter()
+            formatter1.dateFormat = "M-y"
+            let resultfetched = formatter1.string(from: changeDate)
+            
+            if resultfetched == resultDate {
+                count += 1
+                print("\(count)")
+                done.toggle()
+            }
+        }
+    } catch let error as NSError {
+        print("Error while fetching.. \(error.userInfo)")
+    }
+    
+        let percentage = count * 100 / 30
+        print("per \(percentage) count \(count) month \(resultDate)")
+        return percentage
+}
+
+private func stringToDate(string: String) -> Date {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "d-M-y"
+    let date = formatter.date(from: string)!
+    return date
 }
 
 struct ContentView_Previews: PreviewProvider {

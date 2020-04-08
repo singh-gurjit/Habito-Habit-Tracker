@@ -423,6 +423,7 @@ struct GridStack<Content: View>: View {
     }
 }
 
+//view to show progress in chart
 struct MetricsProgressBar: View {
     
     var height: CGFloat
@@ -431,6 +432,7 @@ struct MetricsProgressBar: View {
     
     var body: some View {
         ZStack {
+            //create circle
             Circle()
             .trim(from: 0, to: 1)
                 .stroke(Color.black.opacity(0.25), style: StrokeStyle(lineWidth: 25, lineCap: .round))
@@ -477,6 +479,7 @@ struct CustomBarChart: View {
     }
 }
 
+//view to add new habit
 struct NewHabbitView: View {
     
     @Binding var showSheetNewHabbit: Bool

@@ -26,15 +26,12 @@ class SetNotification {
         }
     }
     
-    func setNotification(aTitle:String, aDesc:String, aDate: Date) {
+    func setNotification(aTitle:String, aDesc:String, aDate: Date, aMode: String) {
         let content = UNMutableNotificationContent()
         content.title = aTitle
         content.subtitle = aDesc
         content.sound = UNNotificationSound.default
-        print("Alarm on")
         
-        let stringDate = decodeDate(getDate: aDate)
-        let arrayDate = stringDate.components(separatedBy: "/")
         //change date to 24 format
         let changedDate = changeDateto24Format(date: aDate)
         let arrayChangedDate = changedDate.components(separatedBy: ":")
@@ -44,18 +41,13 @@ class SetNotification {
         //set hour and minute for reminder
         dateComponents.hour = Int(arrayChangedDate[0])
         dateComponents.minute = Int(arrayChangedDate[1])
-        //split date to day, month and year
-        let rDay = Int(arrayDate[1])
-        let rMonth = Int(arrayDate[0])
-        let rYear = Int("20" + arrayDate[2])
-        //assign date components
-        dateComponents.day = rDay
-        dateComponents.month = rMonth
-        dateComponents.year = rYear
+        
+        //weekday
+        dateComponents.weekday = 3
         
         // Create the trigger as a repeating event.
         let trigger = UNCalendarNotificationTrigger(
-            dateMatching: dateComponents, repeats: false)
+            dateMatching: dateComponents, repeats: true)
         
         // choose a random identifier
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
@@ -66,22 +58,10 @@ class SetNotification {
         notificationCenter.add(request) { (error) in
             if error != nil {
                 print(error!)
+            } else {
+                print("Alarm on ...")
             }
         }
-    }
-    
-    func decodeDate(getDate: Date) -> String{
-        let date = getDate
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        return formatter.string(from: date)
-    }
-    
-    func decodeTime(getDate: Date) -> String{
-        let time = getDate
-        let formatter = DateFormatter()
-        formatter.timeStyle = .medium
-        return formatter.string(from: time)
     }
     
     func changeDateto24Format(date: Date) -> String {

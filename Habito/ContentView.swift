@@ -10,6 +10,7 @@ import SwiftUI
 import CoreData
 import UIKit
 import Foundation
+import UserNotifications
 
 struct ContentView: View {
     
@@ -489,7 +490,10 @@ struct NewHabbitView: View {
     @State var isEmptyFieldAlertShown = false
     @State var showReminderDetail: Bool
     @State var remAlarm: Date
-    @State var remMode = "None"
+    @State var remMode = [0]
+    let notificationManager = SetNotification()
+    let days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+    @State var daysToString = ""
     
     var body: some View {
         NavigationView {
@@ -537,8 +541,7 @@ struct NewHabbitView: View {
                                     if showReminderDetail {
                                         Divider()
                                         //Text("\(reminderDate, formatter: dateFormatter)")
-                                        DatePicker("Alarm", selection: $remAlarm)
-                                        
+                                        DatePicker("Alarm", selection: $remAlarm, displayedComponents: .hourAndMinute)
                                     }
                                 }
                                 
@@ -547,9 +550,14 @@ struct NewHabbitView: View {
                                     HStack {
                                         Text("Repeat")
                                         
-                                        NavigationLink(destination: RepeatModeSelectView(reminderMode: $remMode)) {
+                                        NavigationLink(destination: RepeatModeSelectView(selectedDays: $remMode)) {
                                             Spacer()
-                                            Text(self.remMode).foregroundColor(Color.gray)
+                                            Text("\(self.daysToString)").foregroundColor(Color.gray).onAppear() {
+                                                
+                                                for i in self.remMode {
+                                                    self.daysToString = self.daysToString + self.days[i] + ","
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -566,8 +574,13 @@ struct NewHabbitView: View {
                                         self.isEmptyFieldAlertShown.toggle()
                                         print("Empty Data")
                                     } else {
-                                        createNewHabit(name: self.newHabbit, desc: self.description, repeatMode: self.remMode, aDate: self.remAlarm)
+                                        //*change repeat mode
+                                        createNewHabit(name: self.newHabbit, desc: self.description, repeatMode: "", aDate: self.remAlarm)
                                         self.isDataSave.toggle()
+                                        if self.showReminderDetail {
+                                            self.notificationManager.setPermissions()
+                                            self.notificationManager.setNotification(aTitle: self.newHabbit, aDesc: self.description, aDate: self.remAlarm, aMode: "")
+                                        }
                                     }
                                     if self.isDataSave == true {
                                         self.showSheetNewHabbit.toggle()
@@ -598,9 +611,9 @@ func getBackgroundColor() -> Color {
 }
 
 struct RepeatModeSelectView: View {
-    @Binding var reminderMode: String
     
-    let dayOfWeek = ["None","Everyday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+    let dayOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+    @Binding var selectedDays : [Int]
     
     var body: some View {
         ZStack
@@ -612,19 +625,26 @@ struct RepeatModeSelectView: View {
                 List {
                     ForEach(0..<dayOfWeek.count) { index in
                         HStack {
-                            Text(self.dayOfWeek[index])
+                            Text("\(self.dayOfWeek[index]) \(index)")
                             Spacer()
                             Button(action: {
                                 
                             }) {
-                                if self.reminderMode == self.dayOfWeek[index] {
+                                if self.selectedDays.contains(index) {
                                     Image(systemName: "checkmark.square").imageScale(.large).foregroundColor(Color.orange)
                                 } else {
                                     Image(systemName: "square").imageScale(.large).foregroundColor(Color.black)
                                 }
                                 
                             } .onTapGesture {
-                                self.reminderMode = self.dayOfWeek[index]
+                                //self.reminderMode = self.dayOfWeek[index]
+                                if self.selectedDays.contains(index) {
+                                    let index = self.selectedDays.firstIndex(of: index)
+                                    self.selectedDays.remove(at: index ?? 0)
+                                } else {
+                                    self.selectedDays.append(index)
+                                }
+                                print("\(self.selectedDays)")
                             }
                         }
                     }

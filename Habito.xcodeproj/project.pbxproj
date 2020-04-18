@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E23D4776244B5C0900662ABE /* SetNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23D4775244B5C0900662ABE /* SetNotification.swift */; };
 		E26E61182436843900E78D89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E61172436843900E78D89 /* AppDelegate.swift */; };
 		E26E611A2436843900E78D89 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E61192436843900E78D89 /* SceneDelegate.swift */; };
 		E26E611D2436843900E78D89 /* Habito.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E26E611B2436843900E78D89 /* Habito.xcdatamodeld */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E23D4775244B5C0900662ABE /* SetNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetNotification.swift; sourceTree = "<group>"; };
 		E26E61142436843900E78D89 /* Habito.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Habito.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E26E61172436843900E78D89 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E26E61192436843900E78D89 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 				E26E61192436843900E78D89 /* SceneDelegate.swift */,
 				E29F1C222436895400A05052 /* ViewNav.swift */,
 				E26E611E2436843900E78D89 /* ContentView.swift */,
+				E23D4775244B5C0900662ABE /* SetNotification.swift */,
 				E26E61202436843C00E78D89 /* Assets.xcassets */,
 				E26E61252436843C00E78D89 /* LaunchScreen.storyboard */,
 				E26E61282436843C00E78D89 /* Info.plist */,
@@ -153,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E29F1C232436895400A05052 /* ViewNav.swift in Sources */,
+				E23D4776244B5C0900662ABE /* SetNotification.swift in Sources */,
 				E26E61182436843900E78D89 /* AppDelegate.swift in Sources */,
 				E26E611A2436843900E78D89 /* SceneDelegate.swift in Sources */,
 				E26E611F2436843900E78D89 /* ContentView.swift in Sources */,

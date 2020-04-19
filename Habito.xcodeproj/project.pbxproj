@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09852918B01FEC3D7EFEA6E1 /* Pods_Habito.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3029A8EEF720DD7A9EFB919E /* Pods_Habito.framework */; };
 		E23D4776244B5C0900662ABE /* SetNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23D4775244B5C0900662ABE /* SetNotification.swift */; };
 		E26E61182436843900E78D89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E61172436843900E78D89 /* AppDelegate.swift */; };
 		E26E611A2436843900E78D89 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E61192436843900E78D89 /* SceneDelegate.swift */; };
@@ -19,6 +20,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B4A31724B95BB4DBF35B391 /* Pods-Habito.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Habito.debug.xcconfig"; path = "Target Support Files/Pods-Habito/Pods-Habito.debug.xcconfig"; sourceTree = "<group>"; };
+		3029A8EEF720DD7A9EFB919E /* Pods_Habito.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Habito.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		513C1CE121308EEAE820EF5A /* Pods-Habito.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Habito.release.xcconfig"; path = "Target Support Files/Pods-Habito/Pods-Habito.release.xcconfig"; sourceTree = "<group>"; };
 		E23D4775244B5C0900662ABE /* SetNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetNotification.swift; sourceTree = "<group>"; };
 		E26E61142436843900E78D89 /* Habito.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Habito.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E26E61172436843900E78D89 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -37,17 +41,38 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09852918B01FEC3D7EFEA6E1 /* Pods_Habito.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7A7247DC7C190A4312ED1D51 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1B4A31724B95BB4DBF35B391 /* Pods-Habito.debug.xcconfig */,
+				513C1CE121308EEAE820EF5A /* Pods-Habito.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		D3E495DAB315F6A1AE26EBF2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3029A8EEF720DD7A9EFB919E /* Pods_Habito.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E26E610B2436843900E78D89 = {
 			isa = PBXGroup;
 			children = (
 				E26E61162436843900E78D89 /* Habito */,
 				E26E61152436843900E78D89 /* Products */,
+				7A7247DC7C190A4312ED1D51 /* Pods */,
+				D3E495DAB315F6A1AE26EBF2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -91,9 +116,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E26E612B2436843C00E78D89 /* Build configuration list for PBXNativeTarget "Habito" */;
 			buildPhases = (
+				2D2212F1B1625E68D53C34AC /* [CP] Check Pods Manifest.lock */,
 				E26E61102436843900E78D89 /* Sources */,
 				E26E61112436843900E78D89 /* Frameworks */,
 				E26E61122436843900E78D89 /* Resources */,
+				A99E9D9BC51A632681AE676F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -149,6 +176,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2D2212F1B1625E68D53C34AC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Habito-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A99E9D9BC51A632681AE676F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Habito/Pods-Habito-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Habito/Pods-Habito-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Habito/Pods-Habito-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E26E61102436843900E78D89 /* Sources */ = {
@@ -294,6 +363,7 @@
 		};
 		E26E612C2436843C00E78D89 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1B4A31724B95BB4DBF35B391 /* Pods-Habito.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -314,6 +384,7 @@
 		};
 		E26E612D2436843C00E78D89 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 513C1CE121308EEAE820EF5A /* Pods-Habito.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

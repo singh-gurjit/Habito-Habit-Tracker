@@ -131,7 +131,7 @@ struct DashboardView: View {
                                     }
                                     
                                 }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 20))
-                            })
+                                })
                         }.frame(height: 100)
                         
                         //list to display habits
@@ -575,7 +575,6 @@ struct NewHabbitView: View {
                                         self.isEmptyFieldAlertShown.toggle()
                                         print("Empty Data")
                                     } else {
-                                        //*change repeat mode
                                         createNewHabit(name: self.newHabbit, desc: self.description, repeatMode: self.daysToString, aDate: self.remAlarm)
                                         self.isDataSave.toggle()
                                         if self.showReminderDetail {

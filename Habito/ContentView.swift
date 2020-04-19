@@ -76,6 +76,7 @@ struct DashboardView: View {
     var currentDate = Date()
     @State var selectedDate: String = ""
     @State var uuid = "4D7BC347-E708-453E-9C58-EBDF48FDB263"
+    let colors: [Color] = [.red, .green, .blue, .orange, .pink, .purple, .yellow]
     
     init() {
         UITableView.appearance().separatorColor = .clear
@@ -360,30 +361,9 @@ struct MetricsView: View {
                         .scaledToFill()
                         .edgesIgnoringSafeArea(.all)
                     VStack {
-                            Spacer()
-                            ZStack {
-                                
-                                MetricsProgressBar(height: 300, to: 0.8, color: .red)
-                                MetricsProgressBar(height: 230, to: 0.45, color: .yellow)
-                            
-                                ForEach(habitDb, id: \.self) { item in
-                                    MetricsProgressBar(height: 100, to: CGFloat(getDataFromDB(id: item.id!, date: self.getDisplayDate) / 10), color: .green)
-                                }
-                        }.padding()
-                            Spacer()
-                        List {
-                            Section(header: Text("All Habits (This Month)")){
-                                ForEach(habitDb, id: \.self) { item in
-                                    HStack {
-                                        Text("\(item.name!)").font(Font.headline.weight(.bold)).foregroundColor(getAccentColor())
-                                        Spacer()
-                                        Text("\(getDataFromDB(id: item.id!, date: self.getDisplayDate)) %")
-                                    }
-                                }
-                            }
-                        }.padding()
+                        TableViewHabits()
                     }
-            }
+            }.navigationBarHidden(true)
         }
     }
     
@@ -436,11 +416,11 @@ struct MetricsProgressBar: View {
             //create circle
             Circle()
             .trim(from: 0, to: 1)
-                .stroke(Color.black.opacity(0.25), style: StrokeStyle(lineWidth: 25, lineCap: .round))
+                .stroke(Color.black.opacity(0.25), style: StrokeStyle(lineWidth: 15, lineCap: .round))
                 .frame(height: height)
             Circle()
             .trim(from: 0, to: to)
-                .stroke(color, style: StrokeStyle(lineWidth: 25, lineCap: .round))
+                .stroke(color, style: StrokeStyle(lineWidth: 15, lineCap: .round))
                 .frame(height: height)
         }.rotationEffect(.init(degrees: 270))
         
@@ -451,12 +431,14 @@ struct CustomBar: View {
     
     @State var percentage: CGFloat = 0
     var dayOfWeek = ""
+    var color: Color = .white
     
     var body: some View {
         VStack {
             Text(String(format: "%.0f", Double(percentage)) + " %").foregroundColor(Color.black).opacity(0.5)
-            Rectangle().fill(getAccentColor()).frame(width: UIScreen.main.bounds.width / 7 - 12, height: getBarHight())
-            Text("\(dayOfWeek)").foregroundColor(Color.black).opacity(0.5)
+            .font(.subheadline)
+            Rectangle().fill(color).frame(width: UIScreen.main.bounds.width / 7 - 12, height: getBarHight())
+            Text("\(dayOfWeek)").foregroundColor(Color.black).opacity(0.5).font(.subheadline)
         }
     }
     
@@ -470,9 +452,12 @@ struct CustomBarChart: View {
     var color: Color = .white
     var body: some View {
         HStack {
-            Text(String(format: "%.0f", Double(percentage)) + " %").foregroundColor(Color.black).opacity(0.5)
-            Capsule().fill(color).frame(width: percentage, height: 15)
-        }.padding()
+            //Capsule().fill(color).frame(width: percentage, height: 15)
+            Capsule().fill(color).frame(width: UIScreen.main.bounds.width - (percentage * 1.5), height: 15)
+            Spacer()
+            Text(String(format: "%.0f", Double(percentage / 2)) + " %").foregroundColor(Color.black).opacity(0.5)
+                .font(.subheadline)
+        }.padding(5)
     }
     
     private func getBarHeight() -> CGFloat {

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		09852918B01FEC3D7EFEA6E1 /* Pods_Habito.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3029A8EEF720DD7A9EFB919E /* Pods_Habito.framework */; };
 		E23D4776244B5C0900662ABE /* SetNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23D4775244B5C0900662ABE /* SetNotification.swift */; };
+		E2524E93244C8F5B00C72F7D /* TableViewHabits.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2524E92244C8F5B00C72F7D /* TableViewHabits.swift */; };
 		E26E61182436843900E78D89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E61172436843900E78D89 /* AppDelegate.swift */; };
 		E26E611A2436843900E78D89 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E61192436843900E78D89 /* SceneDelegate.swift */; };
 		E26E611D2436843900E78D89 /* Habito.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E26E611B2436843900E78D89 /* Habito.xcdatamodeld */; };
@@ -24,6 +25,7 @@
 		3029A8EEF720DD7A9EFB919E /* Pods_Habito.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Habito.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		513C1CE121308EEAE820EF5A /* Pods-Habito.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Habito.release.xcconfig"; path = "Target Support Files/Pods-Habito/Pods-Habito.release.xcconfig"; sourceTree = "<group>"; };
 		E23D4775244B5C0900662ABE /* SetNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetNotification.swift; sourceTree = "<group>"; };
+		E2524E92244C8F5B00C72F7D /* TableViewHabits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewHabits.swift; sourceTree = "<group>"; };
 		E26E61142436843900E78D89 /* Habito.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Habito.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E26E61172436843900E78D89 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E26E61192436843900E78D89 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -54,7 +56,6 @@
 				1B4A31724B95BB4DBF35B391 /* Pods-Habito.debug.xcconfig */,
 				513C1CE121308EEAE820EF5A /* Pods-Habito.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -91,6 +92,7 @@
 				E26E61192436843900E78D89 /* SceneDelegate.swift */,
 				E29F1C222436895400A05052 /* ViewNav.swift */,
 				E26E611E2436843900E78D89 /* ContentView.swift */,
+				E2524E92244C8F5B00C72F7D /* TableViewHabits.swift */,
 				E23D4775244B5C0900662ABE /* SetNotification.swift */,
 				E26E61202436843C00E78D89 /* Assets.xcassets */,
 				E26E61252436843C00E78D89 /* LaunchScreen.storyboard */,
@@ -209,6 +211,7 @@
 				E29F1C232436895400A05052 /* ViewNav.swift in Sources */,
 				E23D4776244B5C0900662ABE /* SetNotification.swift in Sources */,
 				E26E61182436843900E78D89 /* AppDelegate.swift in Sources */,
+				E2524E93244C8F5B00C72F7D /* TableViewHabits.swift in Sources */,
 				E26E611A2436843900E78D89 /* SceneDelegate.swift in Sources */,
 				E26E611F2436843900E78D89 /* ContentView.swift in Sources */,
 				E26E611D2436843900E78D89 /* Habito.xcdatamodeld in Sources */,

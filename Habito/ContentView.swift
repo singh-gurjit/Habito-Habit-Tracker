@@ -552,8 +552,9 @@ struct NewHabbitView: View {
                                         
                                         NavigationLink(destination: RepeatModeSelectView(selectedDays: $remMode)) {
                                             Spacer()
-                                            Text("\(self.daysToString)").foregroundColor(Color.gray).onAppear() {
-                                                
+                                            
+                                            Text("\(removeLastChar(string: daysToString))").foregroundColor(Color.gray).onAppear() {
+                                                self.daysToString = ""
                                                 for i in self.remMode {
                                                     self.daysToString = self.daysToString + self.days[i] + ","
                                                 }
@@ -575,11 +576,11 @@ struct NewHabbitView: View {
                                         print("Empty Data")
                                     } else {
                                         //*change repeat mode
-                                        createNewHabit(name: self.newHabbit, desc: self.description, repeatMode: "", aDate: self.remAlarm)
+                                        createNewHabit(name: self.newHabbit, desc: self.description, repeatMode: self.daysToString, aDate: self.remAlarm)
                                         self.isDataSave.toggle()
                                         if self.showReminderDetail {
                                             self.notificationManager.setPermissions()
-                                            self.notificationManager.setNotification(aTitle: self.newHabbit, aDesc: self.description, aDate: self.remAlarm, aMode: "")
+                                            self.notificationManager.setNotification(aTitle: self.newHabbit, aDesc: self.description, aDate: self.remAlarm, aMode: self.remMode)
                                         }
                                     }
                                     if self.isDataSave == true {
@@ -599,6 +600,11 @@ struct NewHabbitView: View {
                     }
             }
         }
+    }
+    
+    func removeLastChar(string: String) -> String {
+        let result = string.dropLast()
+        return String(result)
     }
 }
 
@@ -625,7 +631,7 @@ struct RepeatModeSelectView: View {
                 List {
                     ForEach(0..<dayOfWeek.count) { index in
                         HStack {
-                            Text("\(self.dayOfWeek[index]) \(index)")
+                            Text("\(self.dayOfWeek[index])")
                             Spacer()
                             Button(action: {
                                 

@@ -8,6 +8,7 @@
 
 import Foundation
 import UserNotifications
+import UIKit
 
 struct Notification {
     var title: String
@@ -26,7 +27,7 @@ class SetNotification {
         }
     }
     
-    func setNotification(aTitle:String, aDesc:String, aDate: Date, aMode: String) {
+    func setNotification(aTitle:String, aDesc:String, aDate: Date, aMode: [Int]) {
         let content = UNMutableNotificationContent()
         content.title = aTitle
         content.subtitle = aDesc
@@ -41,27 +42,33 @@ class SetNotification {
         //set hour and minute for reminder
         dateComponents.hour = Int(arrayChangedDate[0])
         dateComponents.minute = Int(arrayChangedDate[1])
-        
-        //weekday
-        dateComponents.weekday = 3
-        
-        // Create the trigger as a repeating event.
-        let trigger = UNCalendarNotificationTrigger(
-            dateMatching: dateComponents, repeats: true)
-        
-        // choose a random identifier
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        
-        // add our notification request
-        //UNUserNotificationCenter.current().add(request)
-        let notificationCenter = UNUserNotificationCenter.current()
-        notificationCenter.add(request) { (error) in
-            if error != nil {
-                print(error!)
-            } else {
-                print("Alarm on ...")
+        //set multiple notifications
+        for (index, element) in aMode.enumerated() {
+            //increase element value by one
+            let day = element + 1
+            print("recieved day index \(index) element \(element) current day \(day)")
+            //weekday
+            dateComponents.weekday = day
+            
+            // Create the trigger as a repeating event.
+            let trigger = UNCalendarNotificationTrigger(
+                dateMatching: dateComponents, repeats: true)
+            
+            // choose a random identifier
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            
+            // add our notification request
+            //UNUserNotificationCenter.current().add(request)
+            let notificationCenter = UNUserNotificationCenter.current()
+            notificationCenter.add(request) { (error) in
+                if error != nil {
+                    print(error!)
+                } else {
+                    print("Alarm on ...")
+                }
             }
         }
+        
     }
     
     func changeDateto24Format(date: Date) -> String {

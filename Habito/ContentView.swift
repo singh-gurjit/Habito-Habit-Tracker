@@ -347,6 +347,7 @@ struct CheckBoxCustomView: View {
 struct MetricsView: View {
     
     let currentDate = Date()
+    let subView = MetricsSubView()
     
     @Environment(\.managedObjectContext) var moc
        @FetchRequest(entity: HabitDB.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \HabitDB.time, ascending: false)]) var habitDb: FetchedResults<HabitDB>
@@ -361,9 +362,10 @@ struct MetricsView: View {
                         .scaledToFill()
                         .edgesIgnoringSafeArea(.all)
                     VStack {
-                        TableViewHabits()
+                        //TableViewHabits()
+                        MetricsSubView()
                     }
-            }.navigationBarHidden(true)
+            }
         }
     }
     
@@ -379,7 +381,6 @@ struct MetricsView: View {
     }
 }
 
-//custom calender
 struct GridStack<Content: View>: View {
     let rows: Int
     let columns: Int
@@ -416,11 +417,11 @@ struct MetricsProgressBar: View {
             //create circle
             Circle()
             .trim(from: 0, to: 1)
-                .stroke(Color.black.opacity(0.25), style: StrokeStyle(lineWidth: 15, lineCap: .round))
+                .stroke(Color.black.opacity(0.25), style: StrokeStyle(lineWidth: 10, lineCap: .round))
                 .frame(height: height)
             Circle()
             .trim(from: 0, to: to)
-                .stroke(color, style: StrokeStyle(lineWidth: 15, lineCap: .round))
+                .stroke(color, style: StrokeStyle(lineWidth: 10, lineCap: .round))
                 .frame(height: height)
         }.rotationEffect(.init(degrees: 270))
         

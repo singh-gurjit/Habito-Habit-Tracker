@@ -18,6 +18,9 @@
 		E26E61242436843C00E78D89 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E26E61232436843C00E78D89 /* Preview Assets.xcassets */; };
 		E26E61272436843C00E78D89 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E26E61252436843C00E78D89 /* LaunchScreen.storyboard */; };
 		E29F1C232436895400A05052 /* ViewNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29F1C222436895400A05052 /* ViewNav.swift */; };
+		E29F5450244DAD93004951F1 /* MetricsSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29F544F244DAD93004951F1 /* MetricsSubView.swift */; };
+		E29F5452244DCA90004951F1 /* HabitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29F5451244DCA90004951F1 /* HabitDetailView.swift */; };
+		E29F5454244DCFB7004951F1 /* GridCalender.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29F5453244DCFB7004951F1 /* GridCalender.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +39,9 @@
 		E26E61262436843C00E78D89 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E26E61282436843C00E78D89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E29F1C222436895400A05052 /* ViewNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewNav.swift; sourceTree = "<group>"; };
+		E29F544F244DAD93004951F1 /* MetricsSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsSubView.swift; sourceTree = "<group>"; };
+		E29F5451244DCA90004951F1 /* HabitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailView.swift; sourceTree = "<group>"; };
+		E29F5453244DCFB7004951F1 /* GridCalender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCalender.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +98,9 @@
 				E26E61192436843900E78D89 /* SceneDelegate.swift */,
 				E29F1C222436895400A05052 /* ViewNav.swift */,
 				E26E611E2436843900E78D89 /* ContentView.swift */,
+				E29F5451244DCA90004951F1 /* HabitDetailView.swift */,
+				E29F5453244DCFB7004951F1 /* GridCalender.swift */,
+				E29F544F244DAD93004951F1 /* MetricsSubView.swift */,
 				E2524E92244C8F5B00C72F7D /* TableViewHabits.swift */,
 				E23D4775244B5C0900662ABE /* SetNotification.swift */,
 				E26E61202436843C00E78D89 /* Assets.xcassets */,
@@ -210,7 +219,10 @@
 			files = (
 				E29F1C232436895400A05052 /* ViewNav.swift in Sources */,
 				E23D4776244B5C0900662ABE /* SetNotification.swift in Sources */,
+				E29F5452244DCA90004951F1 /* HabitDetailView.swift in Sources */,
 				E26E61182436843900E78D89 /* AppDelegate.swift in Sources */,
+				E29F5450244DAD93004951F1 /* MetricsSubView.swift in Sources */,
+				E29F5454244DCFB7004951F1 /* GridCalender.swift in Sources */,
 				E2524E93244C8F5B00C72F7D /* TableViewHabits.swift in Sources */,
 				E26E611A2436843900E78D89 /* SceneDelegate.swift in Sources */,
 				E26E611F2436843900E78D89 /* ContentView.swift in Sources */,

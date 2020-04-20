@@ -76,7 +76,9 @@ struct DashboardView: View {
     var currentDate = Date()
     @State var selectedDate: String = ""
     @State var uuid = "4D7BC347-E708-453E-9C58-EBDF48FDB263"
-    let colors: [Color] = [.red, .green, .blue, .orange, .pink, .purple, .yellow]
+    @State var showDetailHabitView = false
+    @State var prevColor = 0
+    @State var colors: [Color] = [.orange, .purple, .yellow]
     
     init() {
         UITableView.appearance().separatorColor = .clear
@@ -150,7 +152,13 @@ struct DashboardView: View {
                                     CheckBoxCustomView(habitId: item.id!, selectDate: self.getDisplayDate, completedHabitId: self.stringToUUID(input: self.uuid))
                                     
                                 }.padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
+                                    //.background(self.getRandomColor())
                                     .background(Image("back_orange").resizable())
+                                .onTapGesture {
+                                        self.showDetailHabitView.toggle()
+                                }.sheet(isPresented: self.$showDetailHabitView) {
+                                    HabitDetailView(isPresented: self.$showDetailHabitView)
+                                }
                             }
                             .onDelete { (indexSet) in
                                 for offset in indexSet {
@@ -168,6 +176,11 @@ struct DashboardView: View {
             }
         }
         
+    }
+    
+    func getRandomColor() -> Color {
+        let result = colors.randomElement()!
+        return result
     }
     
     //change string to UUID
@@ -321,16 +334,20 @@ struct CheckBoxCustomView: View {
             }
             if completedHabitFound {
                 Button(action: {
+                    
+                }) {
+                    Image(systemName: "checkmark.circle").foregroundColor(Color.white).font(.title)
+                }.onTapGesture {
                     deleteHabit(id: self.completedHabitId)
                     self.completedHabitFound.toggle()
-                }) {
-                    Image(systemName: "checkmark.square").foregroundColor(Color.white).font(.title)
                 }
             } else {
                 Button(action: {
-                    completedHabit(habitID: self.habitId, completedDate: self.stringToDateCompleted(string: self.selectDate))
+                    
                 }) {
-                    Image(systemName: "square").foregroundColor(Color.white).font(.title)
+                    Image(systemName: "circle").foregroundColor(Color.white).font(.title)
+                }.onTapGesture {
+                    completedHabit(habitID: self.habitId, completedDate: self.stringToDateCompleted(string: self.selectDate))
                 }
             }
         }

@@ -13,6 +13,8 @@ struct GridCalender: View {
     let rows = 5
     let columns = 7
     let days = ["SUN","MON","TUE","WED","THU","FRI","SAT"]
+    var currentDate = 1
+    @State var hiddenView = false
     
     var body: some View {
         VStack {
@@ -25,7 +27,10 @@ struct GridCalender: View {
                 HStack(spacing: 15) {
                     ForEach(0 ..< self.columns, id: \.self) { column in
                         //self.content(row, column)
-                        Image(systemName: self.cell(row, column)).font(.largeTitle)
+                        VStack {
+                            Image(systemName: self.cell(row, column)).font(.largeTitle)
+                            //Text("\(self.getStartDay)")
+                        }
                     }
                 }.padding(10)
             }
@@ -34,11 +39,17 @@ struct GridCalender: View {
     
     var cell:(Int, Int) -> String = { row, col in
         let result: String
-        if row == 2 {
+        
+        if row == 0 && col == 4 {
+            result = "circle"
+        } else if row == 0 && col < 4{
+             result = "circle"
+        } else if row == 2 {
             result = "\((row * 7) + col).circle.fill"
         } else {
             result = "\((row * 7) + col).circle"
         }
         return result
     }
+    
 }

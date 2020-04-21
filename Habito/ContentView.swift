@@ -101,9 +101,9 @@ struct DashboardView: View {
                     
                     VStack(alignment: .leading) {
                         //list of dates of month
-                            Text("Date: \(getDisplayDate)").onAppear() {
-                                self.selectedDate = self.getDisplayDate
-                            }.padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0))
+                        Text("Date: \(getDisplayDate)").onAppear() {
+                            self.selectedDate = self.getDisplayDate
+                        }.padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0))
                         List {
                             //horizontal scroll view for dates
                             ScrollView(.horizontal,showsIndicators: false, content: {
@@ -134,7 +134,7 @@ struct DashboardView: View {
                                     }
                                     
                                 }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 20))
-                                })
+                            })
                         }.frame(height: 100)
                         
                         //list to display habits
@@ -154,10 +154,10 @@ struct DashboardView: View {
                                 }.padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 10))
                                     //.background(self.getRandomColor())
                                     .background(Image("back_orange").resizable())
-                                .onTapGesture {
+                                    .onTapGesture {
                                         self.showDetailHabitView.toggle()
                                 }.sheet(isPresented: self.$showDetailHabitView) {
-                                    HabitDetailView(isPresented: self.$showDetailHabitView)
+                                    HabitDetailView(isPresented: self.$showDetailHabitView, habID: item.id!)
                                 }
                             }
                             .onDelete { (indexSet) in
@@ -184,10 +184,10 @@ struct DashboardView: View {
     }
     
     //change string to UUID
-           func stringToUUID(input: String) -> UUID {
-               let getInput = UUID(uuidString: input)!
-               return getInput
-           }
+    func stringToUUID(input: String) -> UUID {
+        let getInput = UUID(uuidString: input)!
+        return getInput
+    }
     
     //get start date of month
     private var startDateOfMonth: Int {
@@ -325,8 +325,8 @@ struct CheckBoxCustomView: View {
             ForEach(self.habitCompleted, id: \.self) { data in
                 Text("").onAppear() {
                     if data.habitid! == self.habitId && (data.completedate! == self.stringToDateCompleted(string: self.selectDate)) {
-                            //self.stringToDateCompleted(string: self.selectedDate)
-                            self.completedHabitFound.toggle()
+                        //self.stringToDateCompleted(string: self.selectedDate)
+                        self.completedHabitFound.toggle()
                         self.completedHabitId = data.id!
                     }
                     
@@ -367,7 +367,7 @@ struct MetricsView: View {
     let subView = MetricsSubView()
     
     @Environment(\.managedObjectContext) var moc
-       @FetchRequest(entity: HabitDB.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \HabitDB.time, ascending: false)]) var habitDb: FetchedResults<HabitDB>
+    @FetchRequest(entity: HabitDB.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \HabitDB.time, ascending: false)]) var habitDb: FetchedResults<HabitDB>
     
     
     var body: some View {
@@ -402,7 +402,7 @@ struct GridStack<Content: View>: View {
     let rows: Int
     let columns: Int
     let content: (Int, Int) -> Content
-
+    
     var body: some View {
         VStack {
             ForEach(0 ..< rows, id: \.self) { row in
@@ -414,7 +414,7 @@ struct GridStack<Content: View>: View {
             }
         }
     }
-
+    
     init(rows: Int, columns: Int, @ViewBuilder content: @escaping (Int, Int) -> Content) {
         self.rows = rows
         self.columns = columns
@@ -433,11 +433,11 @@ struct MetricsProgressBar: View {
         ZStack {
             //create circle
             Circle()
-            .trim(from: 0, to: 1)
+                .trim(from: 0, to: 1)
                 .stroke(Color.black.opacity(0.25), style: StrokeStyle(lineWidth: 10, lineCap: .round))
                 .frame(height: height)
             Circle()
-            .trim(from: 0, to: to)
+                .trim(from: 0, to: to)
                 .stroke(color, style: StrokeStyle(lineWidth: 10, lineCap: .round))
                 .frame(height: height)
         }.rotationEffect(.init(degrees: 270))
@@ -454,7 +454,7 @@ struct CustomBar: View {
     var body: some View {
         VStack {
             Text(String(format: "%.0f", Double(percentage)) + " %").foregroundColor(Color.black).opacity(0.5)
-            .font(.subheadline)
+                .font(.subheadline)
             Rectangle().fill(color).frame(width: UIScreen.main.bounds.width / 7 - 12, height: getBarHight())
             Text("\(dayOfWeek)").foregroundColor(Color.black).opacity(0.5).font(.subheadline)
         }
@@ -576,7 +576,7 @@ struct NewHabbitView: View {
                                 Button(action: {
                                     if (self.newHabbit.isEmpty) {
                                         self.isEmptyFieldAlertShown.toggle()
-                                        print("Empty Data")
+                                        //print("Empty Data")
                                     } else {
                                         createNewHabit(name: self.newHabbit, desc: self.description, repeatMode: self.daysToString, aDate: self.remAlarm)
                                         self.isDataSave.toggle()
@@ -652,14 +652,14 @@ struct RepeatModeSelectView: View {
                                 } else {
                                     self.selectedDays.append(index)
                                 }
-                                print("\(self.selectedDays)")
+                                //print("\(self.selectedDays)")
                             }
                         }
                     }
                 }.accentColor(getAccentColor())
         }.navigationBarTitle("Repeat")
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: NavigationRepeatModeItem())
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading: NavigationRepeatModeItem())
         
     }
 }
@@ -735,7 +735,7 @@ func completedHabit(habitID: UUID, completedDate: Date) {
     habit.setValue(changedDate, forKey: "date")
     do {
         try moc.save()
-        print("Habit completed")
+        //print("Habit completed")
     } catch let error as NSError {
         print("Error while saving.. \(error.userInfo)")
     }
@@ -758,7 +758,7 @@ func deleteHabit(id: UUID) {
             print("Error")
         }
         
-        print("Habit deleted")
+        //print("Habit deleted")
     } catch let error as NSError {
         print("Error while saving.. \(error.userInfo)")
     }
@@ -795,7 +795,7 @@ func getDataFromDB(id: UUID, date: String) -> Int {
             
             if resultfetched == resultDate {
                 count += 1
-                print("\(count)")
+                //print("\(count)")
                 done.toggle()
             }
         }
@@ -803,9 +803,9 @@ func getDataFromDB(id: UUID, date: String) -> Int {
         print("Error while fetching.. \(error.userInfo)")
     }
     
-        let percentage = count * 100 / 30
-        print("per \(percentage) count \(count) month \(resultDate)")
-        return percentage
+    let percentage = count * 100 / 30
+    //print("per \(percentage) count \(count) month \(resultDate)")
+    return percentage
 }
 
 private func stringToDate(string: String) -> Date {
